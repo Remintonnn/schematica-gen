@@ -1,0 +1,20 @@
+{
+    "instruments":[
+        {"id":"harp","block":"air"},
+        {"id":"bass","block":"oak_planks"},
+        {"id":"basedrum","block":"stone"},
+        {"id":"snare","block":"sand"},
+        {"id":"hat","block":"sea_lantern"},
+        {"id":"guitar","block":"white_wool"},
+        {"id":"flute","block":"clay"},
+        {"id":"bell","block":"gold_block"},
+        {"id":"chime","block":"packed_ice"},
+        {"id":"xylophone","block":"bone_block"},
+        {"id":"iron_xylophone","block":"iron_block"},
+        {"id":"cow_bell","block":"soul_sand"},
+        {"id":"didgeridoo","block":"pumpkin"},
+        {"id":"bit","block":"emerald_block"},
+        {"id":"banjo","block":"hay_block"},
+        {"id":"pling","block":"glowstone"}
+    ]
+}
