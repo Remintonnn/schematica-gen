@@ -16,5 +16,6 @@
         {"id":"bit","block":"emerald_block"},
         {"id":"banjo","block":"hay_block"},
         {"id":"pling","block":"glowstone"}
-    ]
+    ],
+    "sideLength":10
 }
