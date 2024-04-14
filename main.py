@@ -6,7 +6,6 @@ import mcschematic
 import math
 
 settings = {}
-baseKey = 33 #note.key-baseKey = noteblock's pitch
 
 def getSettings():
     global settings
@@ -18,7 +17,7 @@ def saveSettings():
 
 def build(song):
     sideLength = settings.get("sideLength")
-    def buildHead(sch = mcschematic.MCSchematic()):#the defult value here it's just for typing info
+    def buildHead(sch:mcschematic.MCSchematic):
         #build the wall stone part
         sch._initFromFile("assets/head_origin.schem")# where the buttom at
         extension = mcschematic.MCSchematic();extension._initFromFile("assets/head_layer_extention.schem")
@@ -46,13 +45,14 @@ def build(song):
             elif wireLen>=15:
                 wireLen = -3 if wireLen==sideLength*2-1 or wireLen==sideLength*2-3 else -4
     
-    modulePos = [2*sideLength-2,0,3] #where the top module's repeater at
+    modulePos = [2*sideLength,0,3] #where the top module's repeater at
     row = [0] #otherwise row+=1 in line 59 would cause error
     module = mcschematic.MCSchematic();module._initFromFile("assets/note_unit.schem")
     turn = mcschematic.MCSchematic();turn._initFromFile("assets/mid_turn.schem")
-    def addFrame(delay,sch=mcschematic.MCSchematic()):
+    def addFrame(delay:int,sch:mcschematic.MCSchematic):
         leftToRight = row[0] %2 ==0
         while delay>0:
+            modulePos[0] += -2 if leftToRight else 2
             if (leftToRight and modulePos[0]<=sideLength*-2-2) or (not leftToRight and  modulePos[0]>=sideLength*2-2):
                 for i in range(layerNeed): sch.placeSchematic(turn,(modulePos[0],modulePos[1]-3*i,modulePos[2]))
                 modulePos[2]+=3
@@ -63,27 +63,43 @@ def build(song):
             for i in range(layerNeed):
                 sch.placeSchematic(module,(modulePos[0],modulePos[1]-3*i,modulePos[2]))
                 sch.setBlock((modulePos[0],modulePos[1]-3*i,modulePos[2]),f"minecraft:repeater[facing={'east' if leftToRight else 'west'},delay={d}]")
-            modulePos[0] += -2 if leftToRight else 2
-        
-    def getlayerNeeded():
+
+    ins = settings.get('instruments')
+    baseKey = 33 #note.key-baseKey = noteblock's pitch
+    notePos = [[[-2,-1,-1],[-2,-1,1],[-1,0,-1],[-1,0,1]],[[2,-1,-1],[2,-1,1],[1,0,-1],[1,0,1]]]
+    def addNote(notes:list,sch:mcschematic.MCSchematic):
+        for note in notes:
+            layer = note.layer# + 4-highestNote%4 #to push the song down and make the buttom layer touch ground
+            np = notePos[row[0]%2][layer%4]
+            layerOffset = (layer//4)*-3
+            sch.setBlock((modulePos[0]+np[0],modulePos[1]+np[1]+layerOffset,modulePos[2]+np[2]),
+                         f"minecraft:note_block[instrument={ins[note.instrument].get('id')},note={note.key-baseKey}]")
+            sch.setBlock((modulePos[0]+np[0],modulePos[1]+np[1]+layerOffset-1,modulePos[2]+np[2]),
+                         ins[note.instrument].get('block'))
+            if(ins[note.instrument].get('block')=="sand"):
+                sch.setBlock((modulePos[0]+np[0],modulePos[1]+np[1]+layerOffset-2,modulePos[2]+np[2]),"stone")
+            sch.setBlock((modulePos[0]-1+2*(row[0]%2),modulePos[1]-1+layerOffset,modulePos[2]),
+                         "minecraft:redstone_wire[east=side,south=side,north=side,west=side]")
+
+    def counteLayer():
         # song.header.song_layers is unrelyable as it won't go down after it went up
         # a.k.a won't react to manual song compression 
-        result = 0
+        highest = 0
         for tick, chord in song:
             for note in chord:
-                if note.layer>result: result=note.layer
-        result+= 1
-        result = math.ceil(result/4)
-        return result
+                if note.layer>highest: highest=note.layer
+        highest+= 1
+        return math.ceil(highest/4), highest
     
-    layerNeed = getlayerNeeded()
+    # V layer of frame needed, 4note per layer
+    layerNeed, highestNote = counteLayer()
     schem = mcschematic.MCSchematic()
     buildHead(schem)
 
     lastTick = -1
     for tick, chord in song:
         addFrame(tick-lastTick,schem);lastTick=tick
-        # print(tick, [f"{settings.get('instruments')[note.instrument].get('id')}:{note.key-baseKey}" for note in chord])
+        addNote(chord,schem)
     
     schem.save("D:\Minecraft\PrismLauncher\instence\Me\.minecraft\schematics\Task", "output", mcschematic.Version.JE_1_20_1)
 
