@@ -1,6 +1,6 @@
-# schematica gen
+# schematica gen(NOT DONE YET DON'T USE)
 A python script that converts .nbs from [Open Note Block Studio](https://github.com/OpenNBS/OpenNoteBlockStudio) into .schem to help you build it in game
-functions the same as the build-in one, but with some bug fixs and improvement
+functions the same as the build-in one in Note Block Studio, but with some bug fixs and improvement
 
 ## Table of Contents
 * [General Info](#general-information)
