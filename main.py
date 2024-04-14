@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import filedialog
 import mcschematic
 import math
-import time
 
 settings = {}
 baseKey = 33 #note.key-baseKey = noteblock's pitch
@@ -48,7 +47,7 @@ def build(song):
                 wireLen = -3 if wireLen==sideLength*2-1 or wireLen==sideLength*2-3 else -4
     
     modulePos = [2*sideLength-2,0,3] #where the top module's repeater at
-    row = [0] #otherwise row+=1 in line 60 would cause error
+    row = [0] #otherwise row+=1 in line 59 would cause error
     module = mcschematic.MCSchematic();module._initFromFile("assets/note_unit.schem")
     turn = mcschematic.MCSchematic();turn._initFromFile("assets/mid_turn.schem")
     def addFrame(delay,sch=mcschematic.MCSchematic()):
@@ -60,7 +59,6 @@ def build(song):
                 leftToRight = not leftToRight;row[0]+=1
                 module.getStructure().flip((0,0,0),"yz",True)
                 turn.getStructure().flip((0,0,0),"yz",True)
-                time.sleep(0.05)
             d = 4 if delay>=4 else delay; delay -= d
             for i in range(layerNeed):
                 sch.placeSchematic(module,(modulePos[0],modulePos[1]-3*i,modulePos[2]))
