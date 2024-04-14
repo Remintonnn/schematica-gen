@@ -81,6 +81,19 @@ def build(song):
             sch.setBlock((modulePos[0]-1+2*(row[0]%2),modulePos[1]-1+layerOffset,modulePos[2]),
                          "minecraft:redstone_wire[east=side,south=side,north=side,west=side]")
 
+    def addWalkWay(sch:mcschematic.MCSchematic):
+        for x in range(3):
+            for z in range(3*row[0]):
+                sch.setBlock((-3+x,2,3+z),"minecraft:stone")
+    def addBottonPlate(sch:mcschematic.MCSchematic):
+        for z in range(3*(2+row[0])):
+            for x in range(3+4*sideLength):
+                if (z-1)%3!=0:
+                    if sch.getBlockDataAt((-3-2*sideLength+x,1-3*layerNeed,-1+z))=="minecraft:air":
+                        sch.setBlock( (-3-2*sideLength+x,1-3*layerNeed,-1+z),"minecraft:mud")
+                    continue
+                sch.setBlock( (-3-2*sideLength+x,1-3*layerNeed,-1+z),"minecraft:stone")
+
     def counteLayer():
         # song.header.song_layers is unrelyable as it won't go down after it went up
         # a.k.a won't react to manual song compression 
@@ -91,7 +104,7 @@ def build(song):
         highest+= 1
         return math.ceil(highest/4), highest
     
-    # V layer of frame needed, 4note per layer
+    # VVV layer of frame needed, 4note per layer
     layerNeed, highestNote = counteLayer()
     schem = mcschematic.MCSchematic()
     buildHead(schem)
@@ -100,7 +113,8 @@ def build(song):
     for tick, chord in song:
         addFrame(tick-lastTick,schem);lastTick=tick
         addNote(chord,schem)
-    
+    addWalkWay(schem)
+    addBottonPlate(schem)
     schem.save("D:\Minecraft\PrismLauncher\instence\Me\.minecraft\schematics\Task", "output", mcschematic.Version.JE_1_20_1)
 
 def init():
