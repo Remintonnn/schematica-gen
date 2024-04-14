@@ -1,6 +1,6 @@
 {
     "instruments":[
-        {"id":"harp","block":"air"},
+        {"id":"harp","block":"mud"},
         {"id":"bass","block":"oak_planks"},
         {"id":"basedrum","block":"stone"},
         {"id":"snare","block":"sand"},
