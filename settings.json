@@ -17,5 +17,5 @@
         {"id":"banjo","block":"hay_block"},
         {"id":"pling","block":"glowstone"}
     ],
-    "sideLength":10
+    "sideLength":7
 }

@@ -1,6 +1,7 @@
 import mcschematic
 import math
 import setting
+import random
 
 settings = setting.getSettings()
 def build(song):
@@ -37,9 +38,11 @@ def build(song):
     row = [0] #otherwise row+=1 in line 59 would cause error
     module = mcschematic.MCSchematic();module._initFromFile("assets/note_unit.schem")
     turn = mcschematic.MCSchematic();turn._initFromFile("assets/mid_turn.schem")
+    orangeLine = [0]
     def addFrame(delay:int,sch:mcschematic.MCSchematic):
         leftToRight = row[0] %2 ==0
         while delay>0:
+            d = 4 if delay>=4 else delay; delay -= d
             modulePos[0] += -2 if leftToRight else 2
             if (leftToRight and modulePos[0]<=sideLength*-2-2) or (not leftToRight and  modulePos[0]>=sideLength*2-2):
                 for i in range(layerNeed): sch.placeSchematic(turn,(modulePos[0],modulePos[1]-3*i,modulePos[2]))
@@ -47,9 +50,22 @@ def build(song):
                 leftToRight = not leftToRight;row[0]+=1
                 module.getStructure().flip((0,0,0),"yz",True)
                 turn.getStructure().flip((0,0,0),"yz",True)
-            d = 4 if delay>=4 else delay; delay -= d
+                orangeLine[0]=0
+            
+            #for better skin control
+            moud = mcschematic.MCSchematic();moud._initFromMCStructure(module.getStructure().makeCopy())
+            if modulePos[0]+2<=sideLength*-2*0.8 or modulePos[0]+2>=sideLength*2*0.8:
+                replaceBlock(moud,"minecraft:bamboo_planks","minecraft:warped_planks")
+            elif orangeLine[0]>0:
+                orangeLine[0]-=1
+                replaceBlock(moud,"minecraft:bamboo_planks","minecraft:acacia_planks")
+            elif random.randint(1,30)<=1:
+                replaceBlock(moud,"minecraft:bamboo_planks","minecraft:acacia_planks")
+                orangeLine[0] = random.randint(2,5)
+            elif random.randint(1,10)<=1:
+                replaceBlock(moud,"minecraft:bamboo_planks","minecraft:acacia_planks")
             for i in range(layerNeed):
-                sch.placeSchematic(module,(modulePos[0],modulePos[1]-3*i,modulePos[2]))
+                sch.placeSchematic(moud,(modulePos[0],modulePos[1]-3*i,modulePos[2]))
                 sch.setBlock((modulePos[0],modulePos[1]-3*i,modulePos[2]),f"minecraft:repeater[facing={'east' if leftToRight else 'west'},delay={d}]")
 
     ins = settings.get('instruments')
@@ -92,6 +108,15 @@ def build(song):
         highest+= 1
         return math.ceil(highest/4), highest
 
+    def replaceBlock(sch:mcschematic.MCSchematic,target:str,replacement:str):
+        lower, higher= sch.getStructure().getBounds()
+        x1,y1,z1 = lower; x2,y2,z2 = higher
+        for x in range(x1,x2+1):
+            for y in range(y1,y2+1):
+                for z in range(z1,z2+1):
+                    if sch.getBlockDataAt((x,y,z))!=target:continue
+                    sch.setBlock((x,y,z),replacement)
+
     # VVV layer of frame needed, 4note per layer
     layerNeed, highestNote = counteLayer()
     schem = mcschematic.MCSchematic()
@@ -104,3 +129,7 @@ def build(song):
     addWalkWay(schem)
     addBottonPlate(schem)
     schem.save("D:\Minecraft\PrismLauncher\instence\Me\.minecraft\schematics\Task", "output", mcschematic.Version.JE_1_20_1)
+
+import pynbs
+if __name__ == '__main__': # don't mind me just for testing
+    build(pynbs.read("D:/MUSIC THING/Songs/Yeaa Woo/God's Hand Relying on Dreams zip.nbs"))
