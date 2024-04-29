@@ -19,7 +19,6 @@
     ],
     "buildMode": 0,
     "sideLength": 7,
-    "sideLengthCircular": 6,
     "compressLayers": true,
     "lowerPercussion": false,
     "sandwichMode": false,
