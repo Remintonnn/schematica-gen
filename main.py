@@ -14,26 +14,11 @@ def init():
     root.resizable(False,False)
     mainMenu(root)
     # build.build(pynbs.read(filename=fileName))
+    setting.saveSettings(settings)
+    print("saved")
 
 SETTING_GRAY = "#d3d3d3"
 def mainMenu(root:Tk):
-    # The actual gui
-    banner = Label(root)
-    banner.grid(column=1, row=1, sticky = W, padx=8, pady = 2)
-
-    buildMode = IntVar()
-    def modeUpdate():
-        mode=buildMode.get()
-        immg = PhotoImage(file=f"assets/mode{mode}.png")
-        banner.configure(image=immg)
-        banner.image = immg # to prevent GC
-
-    modeTitle = Label(root,text="Select Generaction Mode:");modeTitle.grid(column=1, row=4, sticky = W, padx=8, pady = 2)
-    modes = ['Simple walk way','Circular walk way','Spaghetti','Minecart ride']
-    for i in range(len(modes)):
-        mode = Radiobutton(master=root, text=modes[i], variable=buildMode, value=i, command=modeUpdate)
-        mode.grid(column=1, sticky = W, row=5+i, padx=10,)
-
     # Setting Frame
     settingFrame = Frame(root, bg=SETTING_GRAY, width=450, height=210, padx=8, pady = 5)
     settingFrame.place(x=160,y=190)
@@ -82,7 +67,6 @@ def mainMenu(root:Tk):
             img = PhotoImage(file=f"assets/{settingName}.png")
             settingPic.configure(image=img)
             settingPic.image = img
-            setting.saveSettings(settings)
         toggleButton = Button(settingFrame, image=ON if settings[settingName] else OFF, border=0, bg=SETTING_GRAY,command=lambda:toggle(settingName,toggleButton))
         title = Label(settingFrame,text=title,bg=SETTING_GRAY,anchor='w',font=("arial",10))
         toggleButton.grid(column=1,row=row, sticky='e')
@@ -94,6 +78,34 @@ def mainMenu(root:Tk):
         toggleButton("sandwichMode","Sandwich Mode",5),
         toggleButton("includeLockedLayers","Include Locked Layers",6)
     ]
+
+    #banner & modeSelect
+    banner = Label(root)
+    banner.grid(column=1, row=1, sticky = W, padx=8, pady = 2)
+
+    toggleSupportedByMode = (
+        (True, True, True, True),
+        (True, True, True, True),
+        (False, False, True, True),
+        (True, True, False, True)
+    )
+    buildMode = IntVar(value=settings["buildMode"])
+    def modeUpdate():
+        mode=buildMode.get()
+        settings["buildMode"] = mode
+        immg = PhotoImage(file=f"assets/mode{mode}.png")
+        banner.configure(image=immg)
+        banner.image = immg # to prevent GC
+        settingPic.configure(image=PhotoImage())
+        for i in range(len(toggleSupportedByMode[mode])):
+            toggles[i]['state'] = NORMAL if toggleSupportedByMode[mode][i] else DISABLED
+    modeUpdate()
+
+    modeTitle = Label(root,text="Select Generaction Mode:");modeTitle.grid(column=1, row=4, sticky = W, padx=8, pady = 2)
+    modes = ['Simple walk way','Circular walk way','Spaghetti','Minecart ride']
+    for i in range(len(modes)):
+        mode = Radiobutton(master=root, text=modes[i], variable=buildMode, value=i, command=modeUpdate)
+        mode.grid(column=1, sticky = W, row=5+i, padx=10,)
 
     # def selfDestruct():
     #     for i in eventListeners:
