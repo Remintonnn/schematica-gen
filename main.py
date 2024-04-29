@@ -76,6 +76,7 @@ def mainMenu(root:Tk):
         def toggle(sn:str,but:Button):
             settings[sn] = not settings[sn]
             but.configure(image=ON if settings[sn] else OFF)
+            setting.saveSettings(settings)
         toggleButton = Button(settingFrame, image=ON if settings[settingName] else OFF, border=0, bg=SETTING_GRAY,command=lambda:toggle(settingName,toggleButton))
         title = Label(settingFrame,text=title,bg=SETTING_GRAY,anchor='w',font=("arial",10))
         toggleButton.grid(column=1,row=row, sticky='e')
