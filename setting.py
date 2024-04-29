@@ -1,4 +1,5 @@
 import json
+import regex
 
 def getSettings() -> dict:
     settings = {}
@@ -8,4 +9,6 @@ def getSettings() -> dict:
     
 def saveSettings(settings:dict) -> None:
     with open('settings.json','w') as f:
-        f.write(json.dumps(settings))
+        s = json.dumps(settings, indent=4)
+        s = regex.sub('(\s*){\s*"id": ("[a-zA-Z_]+"),\s*"block": ("[a-zA-Z_]+")\s*}(,?\s*)', r'\1{"id":\2,"block":\3}\4', s)
+        f.write(s)

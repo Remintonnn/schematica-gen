@@ -1,5 +1,5 @@
 {
-    "instruments":[
+    "instruments": [
         {"id":"harp","block":"air"},
         {"id":"bass","block":"oak_planks"},
         {"id":"basedrum","block":"stone"},
@@ -17,11 +17,11 @@
         {"id":"banjo","block":"hay_block"},
         {"id":"pling","block":"glowstone"}
     ],
-    "buildMode":0,
-    "sideLength":7,
-    "sideLengthCircular":6,
-    "compressLayers":true,
-    "lowerPercussion":false,
-    "sandwichMode":false,
-    "includeLockedLayers":false
+    "buildMode": 0,
+    "sideLength": 7,
+    "sideLengthCircular": 6,
+    "compressLayers": true,
+    "lowerPercussion": false,
+    "sandwichMode": false,
+    "includeLockedLayers": false
 }
