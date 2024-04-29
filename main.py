@@ -68,14 +68,20 @@ def mainMenu(root:Tk):
     pathButton = Button(settingFrame,text="Select File",command=getPath, border=4,bg="#b9c3c7")
     pathButton.grid(column=1,row=1,sticky='w',)
 
-    Label(settingFrame,bg=SETTING_GRAY,).grid(row=2,column=1)#spacing between select file and toggles
+    Label(settingFrame,bg=SETTING_GRAY).grid(row=2,column=1)#spacing between select file and toggles
     
+    settingPic = Label(settingFrame,bg=SETTING_GRAY)
+    settingPic.grid(column=3,row=3,rowspan=4)
+
     ON = PhotoImage(file="assets/on.png")
     OFF = PhotoImage(file="assets/off.png")
     def toggleButton(settingName:str,title:str,row:int):
         def toggle(sn:str,but:Button):
             settings[sn] = not settings[sn]
             but.configure(image=ON if settings[sn] else OFF)
+            img = PhotoImage(file=f"assets/{settingName}.png")
+            settingPic.configure(image=img)
+            settingPic.image = img
             setting.saveSettings(settings)
         toggleButton = Button(settingFrame, image=ON if settings[settingName] else OFF, border=0, bg=SETTING_GRAY,command=lambda:toggle(settingName,toggleButton))
         title = Label(settingFrame,text=title,bg=SETTING_GRAY,anchor='w',font=("arial",10))
@@ -88,9 +94,6 @@ def mainMenu(root:Tk):
         toggleButton("sandwichMode","Sandwich Mode",5),
         toggleButton("includeLockedLayers","Include Locked Layers",6)
     ]
-
-    # settingImg = PhotoImage(file=f"assets/{int(buildMode.get())}-{int(compressLayers.get())}{int(lowerPercussion.get())}{int(doubleLayers.get())}",bg=SETTING_GRAY)
-    # settingPic = Label()
 
     # def selfDestruct():
     #     for i in eventListeners:
