@@ -1,10 +1,10 @@
 {
     "instruments":[
-        {"id":"harp","block":"mud"},
+        {"id":"harp","block":"air"},
         {"id":"bass","block":"oak_planks"},
         {"id":"basedrum","block":"stone"},
         {"id":"snare","block":"sand"},
-        {"id":"hat","block":"sea_lantern"},
+        {"id":"hat","block":"glass"},
         {"id":"guitar","block":"white_wool"},
         {"id":"flute","block":"clay"},
         {"id":"bell","block":"gold_block"},
@@ -17,5 +17,11 @@
         {"id":"banjo","block":"hay_block"},
         {"id":"pling","block":"glowstone"}
     ],
-    "sideLength":7
+    "buildMode":0,
+    "sideLength":7,
+    "sideLengthCircular":6,
+    "compressLayers":true,
+    "lowerPercussion":false,
+    "sandwichMode":false,
+    "includeLockedLayers":false
 }

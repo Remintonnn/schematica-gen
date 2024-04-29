@@ -1,6 +1,6 @@
 import json
 
-def getSettings():
+def getSettings() -> dict:
     settings = {}
     with open('settings.json') as f:
         settings = json.load(f)
