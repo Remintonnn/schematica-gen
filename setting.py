@@ -8,7 +8,8 @@ def getSettings() -> dict:
     return settings
     
 def saveSettings(settings:dict) -> None:
+    s = json.dumps(settings, indent=4)
+    # compact the "instruments" part
+    s = regex.sub('(\s*){\s*"id": ("[a-zA-Z_]+"),\s*"block": ("[a-zA-Z_]+")\s*}(,?\s*)', r'\1{"id":\2,"block":\3}\4', s)
     with open('settings.json','w') as f:
-        s = json.dumps(settings, indent=4)
-        s = regex.sub('(\s*){\s*"id": ("[a-zA-Z_]+"),\s*"block": ("[a-zA-Z_]+")\s*}(,?\s*)', r'\1{"id":\2,"block":\3}\4', s)
         f.write(s)
