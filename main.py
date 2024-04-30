@@ -64,7 +64,7 @@ def mainMenu(root:Tk):
         def toggle(sn:str,but:Button):
             settings[sn] = not settings[sn]
             but.configure(image=ON if settings[sn] else OFF)
-            img = PhotoImage(file=f"assets/{settingName}.png")
+            img = PhotoImage(file=f"assets/{settingName}_{'ON' if settings[sn] else 'OFF'}.png")
             settingPic.configure(image=img)
             settingPic.image = img
         toggleButton = Button(settingFrame, image=ON if settings[settingName] else OFF, border=0, bg=SETTING_GRAY,command=lambda:toggle(settingName,toggleButton))
