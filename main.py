@@ -60,17 +60,22 @@ def mainMenu(root:Tk):
 
     ON = PhotoImage(file="assets/on.png")
     OFF = PhotoImage(file="assets/off.png")
+    def updateSettingPic(settingName=""):
+        if settingName=="":settingPic.configure(image=PhotoImage());return
+        img = PhotoImage(file=f"assets/{settingName}_{'ON' if settings[settingName] else 'OFF'}.png")
+        settingPic.configure(image=img)
+        settingPic.image = img
+    def toggle(settingName:str,but:Button):
+            settings[settingName] = not settings[settingName]
+            but.configure(image=ON if settings[settingName] else OFF)
+            updateSettingPic(settingName)
     def toggleButton(settingName:str,title:str,row:int):
-        def toggle(sn:str,but:Button):
-            settings[sn] = not settings[sn]
-            but.configure(image=ON if settings[sn] else OFF)
-            img = PhotoImage(file=f"assets/{settingName}_{'ON' if settings[sn] else 'OFF'}.png")
-            settingPic.configure(image=img)
-            settingPic.image = img
-        toggleButton = Button(settingFrame, image=ON if settings[settingName] else OFF, border=0, bg=SETTING_GRAY,command=lambda:toggle(settingName,toggleButton))
+        toggleButton = Button(settingFrame,image=ON if settings[settingName] else OFF, border=0, bg=SETTING_GRAY,command=lambda:toggle(settingName,toggleButton))
         title = Label(settingFrame,text=title,bg=SETTING_GRAY,anchor='w',font=("arial",10))
-        toggleButton.grid(column=1,row=row, sticky='e')
+        toggleButton.grid(column=1,row=row, sticky='e',ipady=2)
         title.grid(column=2,row=row, sticky='w')
+        toggleButton.bind("<Enter>",lambda e: updateSettingPic(settingName))
+        toggleButton.bind("<Leave>",lambda e: updateSettingPic())
         return toggleButton
     toggles = [
         toggleButton("compressLayers","Compress Layers",3),
@@ -96,7 +101,6 @@ def mainMenu(root:Tk):
         immg = PhotoImage(file=f"assets/mode{mode}.png")
         banner.configure(image=immg)
         banner.image = immg # to prevent GC
-        settingPic.configure(image=PhotoImage())
         for i in range(len(toggleSupportedByMode[mode])):
             toggles[i]['state'] = NORMAL if toggleSupportedByMode[mode][i] else DISABLED
     modeUpdate()
